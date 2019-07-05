@@ -21,21 +21,29 @@ import re
 from statistics import mean 
 
 
-# In[40]:
+# In[69]:
 
 
 file_path = 'C:\\Users\\Schokri\\Desktop\\mocap\\rec12_data_noapp.csv' 
 with open(file_path,'r') as file:
     lines = file.readlines()
-    print(len(lines))
+    
     frame_fields = re.split(',',lines[3][:-3].replace(',,,',',')) # collect the data-id's [:-3] to delete the last-\n entry
+    info_fields = [x for x in re.split(',',lines[1].strip().replace(',,,',',')) if x!='']
+    info_values = [x  for x in re.split(',',lines[2].strip().replace(',,,',','))if x!='']
+
     frames = {}
+    info_Obj = {}
+    
+    for i, field in enumerate(info_fields):
+        info_Obj[field] = info_values [i]
+    
     for frame in lines [6:100]: # skip the informative lines 1-5 until the frames begin 
         values = [float(x) if x!='' else 0 for x in re.split(',',frame.strip())] # empty values equal to zero for now!
-        frameObj = {}
+        frame_Obj = {}
         for i, field in enumerate(frame_fields):
-            frameObj[field] = values [i]
-        frames[frameObj['Frame#']] = frameObj
+            frame_Obj[field] = values [i]
+        frames[frame_Obj['Frame#']] = frame_Obj
 
 
 # In[41]:
